@@ -8,51 +8,16 @@
 <title>Vue.js CRUD - Just Laravel</title>
 
 <!-- Fonts -->
-<link rel="stylesheet"
-    href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <!-- Styles -->
 <style>
-html, body {
-    background-color: #fff;
-    color: #636b6f;
-    font-family: 'Raleway', sans-serif;
-    font-weight: 100;
-    height: auto;
-    margin: 0;
-}
-
-.full-height {
-    min-height: 100vh;
-}
-
-.flex-center {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
-
-.position-ref {
-    position: relative;
-}
-
-.top-right {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-}
-
-.content {
-/*  text-align: center; */
-}
-
-.title {
-    font-size: 84px;
-}
-
-.m-b-md {
-    margin-bottom: 30px;
-}
-
+    body{
+        font-size: 16px;
+    }
+    .form-control{
+        font-size: 14px!important;
+    }
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -71,7 +36,7 @@ html, body {
 }
 
 .modal-container {
-  width: 300px;
+  width: 50%;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -92,44 +57,44 @@ html, body {
 </style>
 </head>
 <body>
+<div class="container" style="margin-top: 30px">
     <div class="flex-center position-ref full-height">
         <div id="vue-wrapper">
-            <div class="content">
-                <!-- <div class="form-group row"> -->
-                    <!-- <div class="col-md-8"> -->
-                        
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Laravel With Vue Js CRUD</h1>
+                    <hr>
+                </div>
+                <div class="col-md-6">
+                    <p class="text-center alert alert-danger" v-bind:class="{ hidden: hasError }">Please fill all fields!</p>
+                    <p class="text-center alert alert-danger" v-bind:class="{ hidden: hasAgeError }">Please enter a valid age!</p>
+                    {{ csrf_field() }}
+                    <p class="text-center alert alert-success" v-bind:class="{ hidden: hasSave }">Item Save Successfully!</p>
 
-                        
-                  <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" 
-                        required v-model="newItem.name" placeholder=" Enter some name">
-                  </div>
-                  <div class="form-group">
-                    <label for="age">Age:</label>
-                    <input type="number" class="form-control" id="age" name="age" 
-                        required v-model="newItem.age" placeholder=" Enter your age">
-                  </div>
-                  <div class="form-group">
-                    <label for="profession">Profession:</label>
-                    <input type="text" class="form-control" id="profession" name="profession"
-                        required v-model="newItem.profession" placeholder=" Enter your profession">
-                  </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required v-model="newItem.name" placeholder=" Enter some name">
+                    </div>
 
-                 <button class="btn btn-primary" @click.prevent="createItem()" id="name" name="name">
-                    <span class="glyphicon glyphicon-plus"></span> ADD
-                 </button>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" class="form-control" id="age" name="age" required v-model="newItem.age" placeholder=" Enter your age">
+                    </div>
+                    <div class="form-group">
+                        <label for="profession">Profession:</label>
+                        <input type="text" class="form-control" id="profession" name="profession" required v-model="newItem.profession" placeholder=" Enter your profession">
+                    </div>
 
-                <p class="text-center alert alert-danger"
-                    v-bind:class="{ hidden: hasError }">Please fill all fields!</p>
-                    <p class="text-center alert alert-danger"
-                    v-bind:class="{ hidden: hasAgeError }">Please enter a valid age!</p>
-                {{ csrf_field() }}
-                <p class="text-center alert alert-success"
-                    v-bind:class="{ hidden: hasDeleted }">Deleted Successfully!</p>
-                <div class="table table-borderless" id="table">
-                    <table class="table table-borderless" id="table">
-                        <thead>
+                    <button class="btn btn-primary" @click.prevent="createItem()" id="name" name="name">
+                        <span class="glyphicon glyphicon-plus"></span> ADD
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <p class="text-center alert alert-success" v-bind:class="{ hidden: hasDeleted }">Deleted Successfully!</p>
+                    <p class="text-center alert alert-success" v-bind:class="{ hidden: hasUpdate }">Item Update Successfully!</p>
+                    <div class="table table-borderless" id="table">
+                        <table class="table table-borderless" id="table">
+                            <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
@@ -137,48 +102,46 @@ html, body {
                                 <th>Profession</th>
                                 <th>Actions</th>
                             </tr>
-                        </thead>
-                        <tr v-for="item in items">
-                            <td>@{{ item.id }}</td>
-                            <td>@{{ item.name }}</td>
-                            <td>@{{ item.age }}</td>
-                            <td>@{{ item.profession }}</td>
-                            
-                            <td id="show-modal" @click="showModal=true; setVal(item.id, item.name, item.age, item.profession)"  class="btn btn-info" ><span
-                            class="glyphicon glyphicon-pencil"></span></td>
-                            <td @click.prevent="deleteItem(item)" class="btn btn-danger"><span
-                                class="glyphicon glyphicon-trash"></span></td>
-                        </tr>
-                    </table>
+                            </thead>
+                            <tr v-for="item in items">
+                                <td>@{{ item.id }}</td>
+                                <td>@{{ item.name }}</td>
+                                <td>@{{ item.age }}</td>
+                                <td>@{{ item.profession }}</td>
+
+                                <td id="show-modal" @click="showModal=true; setVal(item.id, item.name, item.age, item.profession)"  class="btn btn-info" ><span
+                                            class="glyphicon glyphicon-pencil"></span></td>
+                                <td @click.prevent="deleteItem(item)" class="btn btn-danger"><span
+                                            class="glyphicon glyphicon-trash"></span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <modal v-if="showModal" @close="showModal=false">
+                        <h3 slot="header">Edit Item</h3>
+                        <div slot="body">
+
+                            <input type="hidden" disabled class="form-control" id="e_id" name="id" required  :value="this.e_id">
+                            Name: <input type="text" class="form-control" id="e_name" name="name" required  :value="this.e_name">
+                            Age: <input type="number" class="form-control" id="e_age" name="age" required  :value="this.e_age">
+                            Profession: <input type="text" class="form-control" id="e_profession" name="profession" required  :value="this.e_profession">
+                        </div>
+                        <div slot="footer">
+                            <button class="btn btn-default" @click="showModal = false">
+                                Cancel
+                            </button>
+
+                            <button class="btn btn-info" @click="editItem()">
+                                Update
+                            </button>
+                        </div>
+                    </modal>
                 </div>
-                <modal v-if="showModal" @close="showModal=false">
-                    <h3 slot="header">Edit Item</h3>
-                    <div slot="body">
-                        
-                        <input type="hidden" disabled class="form-control" id="e_id" name="id"
-                                required  :value="this.e_id">
-                        Name: <input type="text" class="form-control" id="e_name" name="name"
-                                required  :value="this.e_name">
-                        Age: <input type="number" class="form-control" id="e_age" name="age"
-                        required  :value="this.e_age">
-                        Profession: <input type="text" class="form-control" id="e_profession" name="profession"
-                        required  :value="this.e_profession">
-                        
-                      
-                    </div>
-                    <div slot="footer">
-                        <button class="btn btn-default" @click="showModal = false">
-                        Cancel
-                      </button>
-                      
-                      <button class="btn btn-info" @click="editItem()">
-                        Update
-                      </button>
-                    </div>
-                </modal>
             </div>
+
         </div>
     </div>
+</div>
+
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     <script>
         var app = new Vue({
@@ -188,6 +151,8 @@ html, body {
                 items: [],
                 hasError: true,
                 hasDeleted: true,
+                hasSave: true,
+                hasUpdate: true,
                 hasAgeError: true,
                 showModal: false,
                 e_name: '',
@@ -227,6 +192,7 @@ html, body {
                             _this.newItem = { 'name': '', 'age': '', 'profession': '' };
                             _this.getVueItems();
                         });
+                        this.hasSave = false;
                         this.hasDeleted = true;
                     }
                 },
@@ -241,7 +207,9 @@ html, body {
                     axios.post("{!! url("edititems") !!}/" + i_val_1.value, { val_1: n_val_1.value, val_2: a_val_1.value, val_3: p_val_1.value }).then(function (response) {
                         _this2.getVueItems();
                         _this2.showModal = false;
+
                     });
+                    this.hasUpdate = false;
                     this.hasDeleted = true;
                 },
                 deleteItem: function deleteItem(item) {
@@ -268,14 +236,14 @@ html, body {
 
               <div class="modal-body">
                 <slot name="body">
-                    
+
                 </slot>
               </div>
 
               <div class="modal-footer">
                 <slot name="footer">
-                  
-                  
+
+
                 </slot>
               </div>
             </div>

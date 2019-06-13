@@ -12,7 +12,7 @@ class MainController extends Controller {
 		$data->name = $request->name;
 		$data->age = $request->age;
 		$data->profession = $request->profession;
-		$data->save ();
+		$data->save();
 		return $data;
 	}
 
@@ -20,9 +20,11 @@ class MainController extends Controller {
 		$data = Data::all ();
 		return $data;
 	}
+
 	public function deleteItem(Request $request) {
 		$data = Data::find ( $request->id )->delete ();
 	}
+
 	public function editItem(Request $request, $id){
 		$data =Data::where('id', $id)->first();
 		$data->name = $request->get('val_1');
