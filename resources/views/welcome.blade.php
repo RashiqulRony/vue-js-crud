@@ -18,6 +18,7 @@
     .form-control{
         font-size: 14px!important;
     }
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
